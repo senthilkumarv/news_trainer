@@ -28,7 +28,7 @@ end
 configure :production do
   DataMapper.setup(:default, {
     :adapter  => 'mysql',
-    :host     => '127.0.0.1',
+    :host     => '10.10.5.68',
     :username => 'booster_app_user' ,
     :password => 'B00$t3rU$3r',
     :database => 'booster'})  

@@ -30,7 +30,10 @@ describe "when I hit the home page" do
   end
 
   it "should return 200 when the key is found and update is successful" do
-    post '/update_category/01b5d23af66b81c5f40963e901013e0a'
+    item_category = ItemCategory.new
+    item_category.should_receive(:save)
+    ItemCategory.stub(:new).and_return(item_category)
+    post '/update_category',  [{:id => "01b5d23af66b81c5f40963e901013e0a", :categories => ["Politics"]}].to_json
     last_response.status.should == 200
   end
 
@@ -38,9 +41,23 @@ describe "when I hit the home page" do
     post '/update_category/21a7a378511fdc7c1ac4dd3fbc3259b6'
     last_response.status.should == 404
   end
-  
-  it "should return 500 when the key is found and update fails" do
-    post '/update_category/21a7a378511fdc7c1ac4dd3fbc3259b6'
+
+  it "should return 500 status and no body incase of server error" do
+    item_category = ItemCategory.new
+    item_category.should_receive(:save).and_raise(RuntimeError)
+    ItemCategory.stub(:new).and_return(item_category)
+    post '/update_category',  [{:id => "01b5d23af66b81c5f40963e901013e0a", :categories => ["Politics"]}].to_json
     last_response.status.should == 500
+    last_response.body.should == ''
   end
+
+  it "should not attempt to save when the key is not found" do
+    item_category = ItemCategory.new
+    item_category.should_not_receive(:save)
+    ItemCategory.stub(:new).and_return(item_category)
+    post '/update_category',  [{:id => "nonexistant", :categories => ["Politics"]}].to_json
+    last_response.status.should == 404
+    last_response.body.should == ''
+  end
+
 end

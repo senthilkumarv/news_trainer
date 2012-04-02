@@ -11,15 +11,15 @@ get '/' do
 end
 
 post '/update_category' do
+  begin
   body = request.body.read
-  print body
   data = JSON.parse body
   data.each { |item|
     news_item = Item.get item['id']
 
     if news_item == nil then
       status 404
-      return
+      next
     end
 
     categories = item['categories']
@@ -31,5 +31,8 @@ post '/update_category' do
       category.save
     }
   }
-  status 200
+  status 200 if status != 404
+  rescue
+    status 500
+  end
 end

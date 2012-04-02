@@ -1,0 +1,18 @@
+td, th {
+  border: 1px solid black;
+}
+#title {
+  width: 20%;
+}
+#text {
+  width: 60%;
+}
+#categories {
+  width: 20%;
+}
+#newsitems {
+  width: 100%;
+}
+#saveall {
+  width: 100px;
+}
